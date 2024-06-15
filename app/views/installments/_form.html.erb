@@ -1,0 +1,37 @@
+<%= form_with(model: installment) do |form| %>
+  <% if installment.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(installment.errors.count, "error") %> prohibited this installment from being saved:</h2>
+
+      <ul>
+        <% installment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :student_id, style: "display: block" %>
+    <%= form.select :student_id, options_for_select(@students.pluck(:name, :id)) %>
+  </div>
+
+  <div>
+    <%= form.label :date, style: "display: block" %>
+    <%= form.date_field :date %>
+  </div>
+
+  <div>
+    <%= form.label :amount, style: "display: block" %>
+    <%= form.text_field :amount %>
+  </div>
+
+  <div>
+    <%= form.label :mode_of_payment, style: "display: block" %>
+    <%= form.select :mode_of_payment, options_for_select(Installment.mode_of_payments.keys) %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

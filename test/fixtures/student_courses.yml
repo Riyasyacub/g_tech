@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: one
+  course: one
+  amount: 1.5
+  date: 2024-06-15
+
+two:
+  student: two
+  course: two
+  amount: 1.5
+  date: 2024-06-15

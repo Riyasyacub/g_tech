@@ -1,0 +1,14 @@
+wb         = xlsx_package.workbook
+head_style = wb.styles.add_style b: true
+
+wb.add_worksheet(name: "Students") do |sheet|
+  sheet.add_row ['Roll No', 'Name', 'Courses', 'Date of Joining', 'Total Fees', 'Invoice Number', 'Installment Number', 'Installment date', 'Mode of Payment', 'Paid Amount', 'Balance'], style: head_style
+  @installments.each do |inst|
+    student = inst.student
+    sheet.add_row([student.roll_no, student.name, student.courses, student.date_of_joining, student.total_fees, inst.invoice_number, inst.number, inst.date, inst.mode_of_payment, inst.amount, student.total_fees - student.installments.select { |a| a.number <= inst.number }.sum(&:amount)],
+                  types: [
+                           :string, :string, :string, :date, :float, :string, :integer, :date, :string, :float, :float
+                         ])
+  end
+
+end

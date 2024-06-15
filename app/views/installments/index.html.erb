@@ -1,0 +1,68 @@
+<!--<p style="color: green"><%#= notice %></p>-->
+
+<!--<h1>Installments</h1>-->
+
+<!--<div id="installments">-->
+  <%# @installments.each do |installment| %>
+    <%#= render installment %>
+<!--    <p>-->
+      <%#= link_to "Show this installment", installment %>
+<!--    </p>-->
+  <%# end %>
+<!--</div>-->
+
+<%#= link_to "New installment", new_installment_path %>
+
+<%#= link_to "Students", students_path %>
+
+
+
+
+<div class="m-5 flex justify-between">
+  <div>
+    <%= form_with(url: installments_path, method: :get) do |f| %>
+      <%= f.text_field :query %>
+      <%= f.submit "Search", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+      <%= link_to "Reset", installments_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+    <% end %>
+  </div>
+  <div class="flex justify-end">
+    <%= link_to "New Installment", new_installment_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+    <%= link_to "Students", students_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+  </div>
+</div>
+
+<div>
+
+
+  <% headers = ['Roll No', 'Student Name', 'Courses', 'Invoice Number', 'Installment Date', 'Installment number', 'Amount', 'Action'] %>
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <% headers.each do |h| %>
+          <th scope="col" class="px-6 py-3">
+            <%= h %>
+          </th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @installments.each do |inst| %>
+        <% student = inst.student %>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <td class="px-6 py-4"><%= student.roll_no %></td>
+          <td class="px-6 py-4"><%= link_to student.name, installment_path(inst) %></td>
+          <td class="px-6 py-4"><%= student.courses %></td>
+          <td class="px-6 py-4"><%= inst.invoice_number %></td>
+          <td class="px-6 py-4"><%= inst.date&.format_date %></td>
+          <td class="px-6 py-4"><%= inst.number %></td>
+          <td class="px-6 py-4"><%= inst.amount %></td>
+          <td class="px-6 py-4"><%= link_to "Show Invoice", installment_invoice_path(inst) %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+</div>

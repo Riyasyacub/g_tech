@@ -1,0 +1,108 @@
+<% student = @installment.student %>
+
+
+<div class="w-full flex justify-center">
+  <div class="w-full">
+    <div class="flex">
+      <div class="w-1/6">
+        <%= image_tag('g_tec.jpeg', style: "height: 100px;") %>
+      </div>
+      <div class="w-4/6 flex justify-center items-center">
+        <div>
+          <h3 class="text-3xl font-bold text-center">G TEC COMPUTER EDUCATION</h3>
+          <h5 class="text-xl text-center">Kallakurichi</h5>
+        </div>
+      </div>
+      <div class="w-1/6" ></div>
+    </div>
+
+    <div class="mt-2" >
+      <h3 class="text-xl font-bold text-center">Invoice</h3>
+    </div>
+
+    <div class="flex justify-between items-center p-3 mt-2">
+      <div class="flex">
+        <h3 class="font-semibold">Date: </h3>
+        <span class=" pl-2"><%= @installment.date.format_date %></span>
+      </div>
+      <div class="flex">
+        <h3 class="font-semibold">No: </h3>
+        <span class=" pl-2"><%= @installment.invoice_number %></span>
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center mt-2">
+      <h3 class="font-semibold">Name: </h3>
+      <span class="pl-2"><%= student.name %></span>
+    </div>
+
+    <div class="flex justify-center items-center">
+      <h3 class="font-semibold">Course: </h3>
+      <span class="pl-2"><%= student.courses %></span>
+    </div>
+
+    <div class="flex justify-center items-center mt-4">
+      <div class="border-2 border-black p-3 w-4/5">
+        <div class="w-full flex font-semibold">
+          <div class="w-1/3">Total Fees</div>
+          <div class="w-1/3">:</div>
+          <div class="w-1/3"><%= student.total_fees %></div>
+        </div>
+
+        <div class="w-full flex">
+          <div class="w-1/3">Previous paid amount</div>
+          <div class="w-1/3">:</div>
+          <div class="w-1/3"><%= student.installments.where("number < ?", @installment.number).sum(&:amount) %></div>
+        </div>
+
+        <div class="w-full flex">
+          <div class="w-1/3"><%= @installment.number.ordinalize %> installment Amount</div>
+          <div class="w-1/3">:</div>
+          <div class="w-1/3"><%= @installment.amount %> (<%= @installment.mode_of_payment %>)</div>
+        </div>
+        <hr>
+
+        <div class="w-full flex font-semibold">
+          <div class="w-1/3">Balance</div>
+          <div class="w-1/3">:</div>
+          <div class="w-1/3"><%= student.total_fees - student.installments.where("number <= ?", @installment.number).sum(&:amount) %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-48">
+    </div>
+    <div class="flex justify-end m-5 mr-32" >
+      <h3>Signature</h3>
+    </div>
+
+    <div class="mt-4 pl-8">
+      <h3 class="text-sm" > *This is computer generated invoice</h3>
+      <h3 class="text-sm" > *Fees once paid will not be refunded</h3>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--<div>-->
+<!--  <div>-->
+<!--    Name: <%#= student.name %>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    Courses: <%#= student.courses %>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    Installment Date: <%#= @installment.date.format_date %>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    Installment Amount: <%#= @installment.amount %>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    Previous paid amount: <%#= student.installments.where("number < ?", @installment.number).sum(&:amount) %>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    Balance: <%#= student.total_fees.to_f - student.installments.where("number <= ?", @installment.number).sum(&:amount) %>-->
+<!--  </div>-->
+<!--</div>-->
