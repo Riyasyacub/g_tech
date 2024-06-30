@@ -3,7 +3,7 @@ class Installment < ApplicationRecord
 
   before_validation :set_invoice_number, :set_number
 
-  validates :number, presence: true, uniqueness: { scope: [:student_id] }
+  validates :number, presence: true, uniqueness: { scope: [:student_id, :installment_type] }
   validates :invoice_number, presence: true, uniqueness: true
 
   enum :mode_of_payment, %i(cash upi)
