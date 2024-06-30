@@ -23,4 +23,39 @@
     <strong>Total fees:</strong>
     <%= student.total_fees %>
   </p>
+
+  <p>
+    <strong>Date of Joining:</strong>
+    <%= student.date_of_joining.format_date %>
+  </p>
+
+  <p>
+    <strong>Category:</strong>
+    <%= student.category %>
+  </p>
+
+  <p>
+    <strong>Exam fees:</strong>
+    <%= student.exam_fee %>
+  </p>
+
+  <p>
+    <strong>Opted for Certificate:</strong>
+    <%= student.opted_for_certificate ? 'Yes' : 'No' %>
+  </p>
+
+  <p>
+    <strong>Institution:</strong>
+    <%= student.institution %>
+  </p>
+
+  <p>
+    <strong>Referred by:</strong>
+    <%= student.referred_by %>
+  </p>
+
+  <p>
+    <strong>Course Completed At:</strong>
+    <%= student.course_completed_at.format_date %>
+  </p>
 </div>

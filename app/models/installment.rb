@@ -7,6 +7,7 @@ class Installment < ApplicationRecord
   validates :invoice_number, presence: true, uniqueness: true
 
   enum :mode_of_payment, %i(cash upi)
+  enum installment_type: %w[course exam]
 
   private
 
@@ -16,6 +17,6 @@ class Installment < ApplicationRecord
   end
   def set_number
     return if number.present?
-    self.number = student.installments.count + 1
+    self.number = student.installments.where(installment_type: self.installment_type).count + 1
   end
 end

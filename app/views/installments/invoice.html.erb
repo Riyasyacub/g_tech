@@ -13,10 +13,10 @@
           <h5 class="text-xl text-center">Kallakurichi</h5>
         </div>
       </div>
-      <div class="w-1/6" ></div>
+      <div class="w-1/6"></div>
     </div>
 
-    <div class="mt-2" >
+    <div class="mt-2">
       <h3 class="text-xl font-bold text-center">Invoice</h3>
     </div>
 
@@ -43,66 +43,59 @@
 
     <div class="flex justify-center items-center mt-4">
       <div class="border-2 border-black p-3 w-4/5">
-        <div class="w-full flex font-semibold">
-          <div class="w-1/3">Total Fees</div>
-          <div class="w-1/3">:</div>
-          <div class="w-1/3"><%= student.total_fees %></div>
-        </div>
+
+        <% if @installment.installment_type == 'course' %>
+          <div class="w-full flex font-semibold">
+            <div class="w-1/3">Total Fees</div>
+            <div class="w-1/3">:</div>
+            <div class="w-1/3"><%= student.total_fees %></div>
+          </div>
+        <% else %>
+          <div class="w-full flex font-semibold">
+            <div class="w-1/3">Exam Fees</div>
+            <div class="w-1/3">:</div>
+            <div class="w-1/3"><%= student.exam_fee %></div>
+          </div>
+        <% end %>
+
+        <% if @installment.installment_type == 'course' %>
+          <div class="w-full flex">
+            <div class="w-1/3">Previous paid amount</div>
+            <div class="w-1/3">:</div>
+            <div class="w-1/3"><%= student.installments.where(installment_type: @installment.installment_type).where("number < ?", @installment.number).sum(&:amount) %></div>
+          </div>
+        <% end %>
 
         <div class="w-full flex">
-          <div class="w-1/3">Previous paid amount</div>
-          <div class="w-1/3">:</div>
-          <div class="w-1/3"><%= student.installments.where("number < ?", @installment.number).sum(&:amount) %></div>
-        </div>
-
-        <div class="w-full flex">
-          <div class="w-1/3"><%= @installment.number.ordinalize %> installment Amount</div>
+          <% if @installment.installment_type == 'course' %>
+            <div class="w-1/3"><%= @installment.number.ordinalize %> installment Amount</div>
+          <% else %>
+            <div class="w-1/3">Paid Amount</div>
+          <% end %>
           <div class="w-1/3">:</div>
           <div class="w-1/3"><%= @installment.amount %> (<%= @installment.mode_of_payment %>)</div>
         </div>
-        <hr>
 
-        <div class="w-full flex font-semibold">
-          <div class="w-1/3">Balance</div>
-          <div class="w-1/3">:</div>
-          <div class="w-1/3"><%= student.total_fees - student.installments.where("number <= ?", @installment.number).sum(&:amount) %></div>
-        </div>
+        <% if @installment.installment_type == 'course' %>
+          <hr>
+          <div class="w-full flex font-semibold">
+            <div class="w-1/3">Balance</div>
+            <div class="w-1/3">:</div>
+            <div class="w-1/3"><%= student.total_fees - student.installments.where(installment_type: @installment.installment_type).where("number <= ?", @installment.number).sum(&:amount) %></div>
+          </div>
+        <% end %>
       </div>
     </div>
 
     <div class="h-48">
     </div>
-    <div class="flex justify-end m-5 mr-32" >
+    <div class="flex justify-end m-5 mr-32">
       <h3>Signature</h3>
     </div>
 
     <div class="mt-4 pl-8">
-      <h3 class="text-sm" > *This is computer generated invoice</h3>
-      <h3 class="text-sm" > *Fees once paid will not be refunded</h3>
+      <h3 class="text-sm"> *This is computer generated invoice</h3>
+      <h3 class="text-sm"> *Fees once paid will not be refunded</h3>
     </div>
   </div>
 </div>
-
-
-
-
-<!--<div>-->
-<!--  <div>-->
-<!--    Name: <%#= student.name %>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    Courses: <%#= student.courses %>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    Installment Date: <%#= @installment.date.format_date %>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    Installment Amount: <%#= @installment.amount %>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    Previous paid amount: <%#= student.installments.where("number < ?", @installment.number).sum(&:amount) %>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    Balance: <%#= student.total_fees.to_f - student.installments.where("number <= ?", @installment.number).sum(&:amount) %>-->
-<!--  </div>-->
-<!--</div>-->

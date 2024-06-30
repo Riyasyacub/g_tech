@@ -6,6 +6,8 @@ class Student < ApplicationRecord
 
   before_save :set_roll_no
 
+  enum category: %w[Software Hardware Multimedia Robotics CAD Accounts Tailoring]
+
   private
 
   def set_roll_no

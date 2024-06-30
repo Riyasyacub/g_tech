@@ -74,7 +74,7 @@ class InstallmentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def installment_params
-    params.require(:installment).permit(:student_id, :date, :amount, :mode_of_payment)
+    params.require(:installment).permit(:student_id, :date, :amount, :mode_of_payment, :installment_type)
   end
 
   def set_students

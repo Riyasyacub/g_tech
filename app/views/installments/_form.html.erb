@@ -32,6 +32,11 @@
   </div>
 
   <div>
+    <%= form.label :installment_type, style: "display: block" %>
+    <%= form.select :installment_type, options_for_select(Installment.installment_types.keys) %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>

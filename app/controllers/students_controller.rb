@@ -8,7 +8,7 @@ class StudentsController < ApplicationController
     respond_to do |format|
       format.html
       format.xlsx do
-        @installments = Installment.includes(:student).order(:date)
+        @students = @students.includes(:installments).order(:roll_no)
       end
     end
   end
@@ -72,7 +72,9 @@ class StudentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def student_params
-    params.require(:student).permit(:name, :address, :contact_number, :total_fees, :courses, :date_of_joining)
+    params.require(:student)
+          .permit(:name, :address, :contact_number, :total_fees, :courses, :date_of_joining, :category, :exam_fee,
+                  :opted_for_certificate, :institution, :referred_by, :course_completed_at)
   end
 
 end

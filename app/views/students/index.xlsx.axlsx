@@ -2,13 +2,33 @@ wb         = xlsx_package.workbook
 head_style = wb.styles.add_style b: true
 
 wb.add_worksheet(name: "Students") do |sheet|
-  sheet.add_row ['Roll No', 'Name', 'Courses', 'Date of Joining', 'Total Fees', 'Invoice Number', 'Installment Number', 'Installment date', 'Mode of Payment', 'Paid Amount', 'Balance'], style: head_style
-  @installments.each do |inst|
-    student = inst.student
-    sheet.add_row([student.roll_no, student.name, student.courses, student.date_of_joining, student.total_fees, inst.invoice_number, inst.number, inst.date, inst.mode_of_payment, inst.amount, student.total_fees - student.installments.select { |a| a.number <= inst.number }.sum(&:amount)],
-                  types: [
-                           :string, :string, :string, :date, :float, :string, :integer, :date, :string, :float, :float
-                         ])
+  arr = ['Roll No', 'Name', 'Category', 'Courses', 'Date of Joining', 'Total Fees']
+  5.times do |i|
+    n   = i + 1
+    arr += ["#{n.ordinalize} Invoice Number", "#{n.ordinalize} Installment date", "#{n.ordinalize} Mode of Payment", "#{n.ordinalize} Paid Amount"]
+  end
+  arr += ['Balance', 'Opted for Certificate', 'Exam fee', 'Paid Exam Fee', 'Course Completed At']
+  sheet.add_row arr, style: head_style
+  @students.each do |student|
+    course_fee_installments = student.installments.select { |a| a.installment_type == 'course' }
+
+    arr = [student.roll_no, student.name, student.category, student.courses, student.date_of_joining, student.total_fees]
+    course_fee_installments.each do |inst|
+      arr += [inst.invoice_number, inst.date, inst.mode_of_payment, inst.amount]
+    end
+    (5 - course_fee_installments.length).times do
+      arr += [nil, nil, nil, nil]
+    end
+    arr += [student.total_fees - course_fee_installments.sum(&:amount), student.opted_for_certificate ? 'Yes' : 'No', student.exam_fee,
+            student.installments.select { |a| a.installment_type == 'exam' }.sum(&:amount), student.course_completed_at]
+
+    type_arr = [:string, :string, :string, :string, :date, :float]
+    5.times do |i|
+      type_arr += [:string, :date, :string, :float]
+    end
+    type_arr += [:float, :string, :float, :float, :date]
+
+    sheet.add_row(arr, types: type_arr)
   end
 
 end
