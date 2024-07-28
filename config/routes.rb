@@ -1,34 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
-  # unauthenticated :user do
-  #   root to: 'devise/sessions#new'
-  # end
-  # authenticated :user do
-  #   root to: "students#index", as: :authenticated_root
-  # end
 
-  # unauthenticated do
-  #   root to: 'devise/sessions#new'
-  # end
-  # authenticated :user do
-  #   root to: "students#index", as: :authenticated_root
-  # end
   root to: 'students#index'
-  # root to: "sign_ins#new"
-  #
-  # root "students#index", :constraints => unauthenticated(:user)
 
-  # unauthenticated do
-  #   as :user do
-  #     root to: 'sign_ins#new'
-  #   end
-  # end
-  # authenticated do
-  #   as :user do
-  # root to: 'students#index'
-
-  # end
-  # end
+  get 'students/:id/summary', to: 'students#summary', as: :student_summary
   get 'installments/:id/invoice', to: 'installments#invoice', as: :installment_invoice
   resources :installments
   resources :student_courses

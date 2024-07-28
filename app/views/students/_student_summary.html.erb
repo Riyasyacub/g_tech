@@ -1,0 +1,27 @@
+<%= turbo_frame_tag "student_summary" do %>
+  <div class="border border-2 rounded-md">
+    <% if student.present? %>
+      <div class="flex">
+        <div class="w-1/2">Name:</div>
+        <div class="w-1/2"><%= student.name %></div>
+      </div>
+      <div class="flex">
+        <div class="w-1/2">Total Fees:</div>
+        <div class="-1/2"><%= student.total_fees %></div>
+      </div>
+      <div class="flex">
+        <div class="w-1/2">Total Paid:</div>
+        <% installments = student.installments.course %>
+        <% installments =  installments.where.not(id: installment_id) if installment_id.present? %>
+        <% total_paid = installments.sum(&:amount) %>
+        <div class="w-1/2"><%= total_paid %></div>
+      </div>
+      <div class="flex">
+        <div class="w-1/2">Balance:</div>
+        <div class="w-1/2"><%= student.total_fees - total_paid %></div>
+      </div>
+    <% else %>
+      <h1>Please select Student to display summary</h1>
+    <% end %>
+  </div>
+<% end %>

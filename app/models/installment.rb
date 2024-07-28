@@ -15,6 +15,7 @@ class Installment < ApplicationRecord
     return if invoice_number.present?
     self.invoice_number = Installment.most_recently_created&.invoice_number&.next || 'GT-001'
   end
+
   def set_number
     return if number.present?
     self.number = student.installments.where(installment_type: self.installment_type).count + 1

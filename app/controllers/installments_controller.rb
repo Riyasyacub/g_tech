@@ -33,7 +33,7 @@ class InstallmentsController < ApplicationController
     authorize @installment
     respond_to do |format|
       if @installment.save
-        format.html { redirect_to installment_url(@installment), notice: "Installment was successfully created." }
+        format.html { redirect_to installment_url(@installment), success: "Installment was successfully created." }
         format.json { render :show, status: :created, location: @installment }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -47,7 +47,7 @@ class InstallmentsController < ApplicationController
     authorize @installment
     respond_to do |format|
       if @installment.update(installment_params)
-        format.html { redirect_to installment_url(@installment), notice: "Installment was successfully updated." }
+        format.html { redirect_to installment_url(@installment), success: "Installment was successfully updated." }
         format.json { render :show, status: :ok, location: @installment }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -62,7 +62,7 @@ class InstallmentsController < ApplicationController
     @installment.destroy!
 
     respond_to do |format|
-      format.html { redirect_to installments_url, notice: "Installment was successfully destroyed." }
+      format.html { redirect_to installments_url, success: "Installment was successfully destroyed." }
       format.json { head :no_content }
     end
   end
