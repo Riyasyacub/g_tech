@@ -76,3 +76,9 @@ gem "tailwindcss-rails", "~> 2.6"
 gem 'caxlsx'
 gem 'caxlsx_rails'
 gem "dockerfile-rails", ">= 1.6", :group => :development
+
+gem "devise", "~> 4.9"
+
+gem "pundit", "~> 2.3"
+
+gem 'activerecord-import'

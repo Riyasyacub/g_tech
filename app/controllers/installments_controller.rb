@@ -7,26 +7,30 @@ class InstallmentsController < ApplicationController
   # GET /installments or /installments.json
   def index
     @installments = Installment.all.includes(:student).order(date: :desc)
+    authorize @installments
     @installments = @installments.joins(:student).where("students.name ilike :q or students.roll_no ilike :q or invoice_number ilike :q", q: "%#{params[:query]}%") if params[:query].present?
   end
 
   # GET /installments/1 or /installments/1.json
   def show
+    authorize @installment
   end
 
   # GET /installments/new
   def new
     @installment = Installment.new
+    authorize @installment, :create?
   end
 
   # GET /installments/1/edit
   def edit
+    authorize @installment, :update?
   end
 
   # POST /installments or /installments.json
   def create
     @installment = Installment.new(installment_params)
-
+    authorize @installment
     respond_to do |format|
       if @installment.save
         format.html { redirect_to installment_url(@installment), notice: "Installment was successfully created." }
@@ -40,6 +44,7 @@ class InstallmentsController < ApplicationController
 
   # PATCH/PUT /installments/1 or /installments/1.json
   def update
+    authorize @installment
     respond_to do |format|
       if @installment.update(installment_params)
         format.html { redirect_to installment_url(@installment), notice: "Installment was successfully updated." }
@@ -53,6 +58,7 @@ class InstallmentsController < ApplicationController
 
   # DELETE /installments/1 or /installments/1.json
   def destroy
+    authorize @installment
     @installment.destroy!
 
     respond_to do |format|
@@ -62,7 +68,7 @@ class InstallmentsController < ApplicationController
   end
 
   def invoice
-
+    authorize @installment, :index?
   end
 
   private

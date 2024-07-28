@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_15_191638) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_28_122444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,9 +31,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_15_191638) do
     t.integer "number"
     t.string "invoice_number"
     t.integer "mode_of_payment", default: 0
+    t.integer "installment_type", default: 0
     t.index ["invoice_number"], name: "index_installments_on_invoice_number", unique: true
-    t.index ["student_id", "number"], name: "index_installments_on_student_id_and_number", unique: true
+    t.index ["student_id", "number", "installment_type"], name: "idx_on_student_id_number_installment_type_9e04eac66b"
     t.index ["student_id"], name: "index_installments_on_student_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "group"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_permissions_on_name", unique: true
   end
 
   create_table "student_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -58,9 +68,43 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_15_191638) do
     t.string "contact_number"
     t.text "courses"
     t.date "date_of_joining"
+    t.integer "category", default: 0
+    t.float "exam_fee"
+    t.boolean "opted_for_certificate", default: false
+    t.string "institution"
+    t.string "referred_by"
+    t.date "course_completed_at"
+  end
+
+  create_table "user_permissions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "permission_id", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permission_id"], name: "index_user_permissions_on_permission_id"
+    t.index ["user_id", "permission_id"], name: "index_user_permissions_on_user_id_and_permission_id", unique: true
+    t.index ["user_id"], name: "index_user_permissions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "name", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "installments", "students"
   add_foreign_key "student_courses", "courses"
   add_foreign_key "student_courses", "students"
+  add_foreign_key "user_permissions", "permissions"
+  add_foreign_key "user_permissions", "users"
 end

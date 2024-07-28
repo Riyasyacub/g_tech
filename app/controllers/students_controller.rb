@@ -4,6 +4,7 @@ class StudentsController < ApplicationController
   # GET /students or /students.json
   def index
     @students = Student.all.order(:roll_no)
+    authorize @students
     @students = @students.where("name ilike :q or roll_no ilike :q", q: "%#{params[:query]}%") if params[:query].present?
     respond_to do |format|
       format.html
@@ -29,6 +30,7 @@ class StudentsController < ApplicationController
   # POST /students or /students.json
   def create
     @student = Student.new(student_params)
+    authorize @student
     respond_to do |format|
       if @student.save
         format.html { redirect_to student_url(@student), notice: "Student was successfully created." }
@@ -42,6 +44,7 @@ class StudentsController < ApplicationController
 
   # PATCH/PUT /students/1 or /students/1.json
   def update
+    authorize @student
     respond_to do |format|
       if @student.update(student_params)
         format.html { redirect_to student_url(@student), notice: "Student was successfully updated." }
@@ -55,6 +58,7 @@ class StudentsController < ApplicationController
 
   # DELETE /students/1 or /students/1.json
   def destroy
+    authorize @student
     @student.destroy!
 
     respond_to do |format|
