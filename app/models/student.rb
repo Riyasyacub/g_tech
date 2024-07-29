@@ -8,6 +8,8 @@ class Student < ApplicationRecord
 
   enum category: %w[Software Hardware Multimedia Robotics CAD Accounts Tailoring]
 
+  validates_presence_of :name
+
   private
 
   def set_roll_no

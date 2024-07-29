@@ -22,4 +22,12 @@ namespace :one_off do
       user.save
     end
   end
+
+  task remove_invalid_students: :environment do
+    Student.all.each do |student|
+      next if student.valid?
+      student.installments.destroy_all
+      student.destroy
+    end
+  end
 end
