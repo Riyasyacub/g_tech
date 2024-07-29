@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get 'installments/:id/invoice', to: 'installments#invoice', as: :installment_invoice
   resources :installments
   resources :student_courses
-  authenticate :user, lambda { |u| u.email.in?(['admin@g-tech.com']) } do
+  authenticate :user, lambda { |u| u.email.in?(['admin@g-tec.com']) } do
     mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   end
   resources :students

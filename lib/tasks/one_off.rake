@@ -2,7 +2,7 @@ require 'activerecord-import/base'
 
 namespace :one_off do
   task create_admin: :environment do
-    User.create(name: 'Admin', email: 'admin@g-tech.com', password: 'password', password_confirmation: 'password')
+    User.create(name: 'Admin', email: 'admin@g-tec.com', password: 'password', password_confirmation: 'password')
   end
 
   task create_permissions: :environment do
@@ -16,7 +16,7 @@ namespace :one_off do
   end
 
   task create_admin_permissions: :environment do
-    user = User.find_by(email: "admin@g-tech.com")
+    user = User.find_by(email: "admin@g-tec.com")
     Permission.all.each do |permission|
       user.permissions << permission
       user.save

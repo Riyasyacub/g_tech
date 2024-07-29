@@ -9,6 +9,7 @@ class StudentsController < ApplicationController
     respond_to do |format|
       format.html
       format.xlsx do
+        authorize Installment.new
         @students = @students.includes(:installments).order(:roll_no)
       end
     end

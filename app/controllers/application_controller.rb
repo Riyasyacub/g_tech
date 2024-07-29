@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def permission_denied
     flash[:error] = "You are not allowed to perform this action"
-    redirect_to action: :index
+    redirect_back(fallback_location: root_path)
   end
 
 end
