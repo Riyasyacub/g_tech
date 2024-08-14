@@ -89,7 +89,7 @@ class InstallmentsController < ApplicationController
   end
 
   def set_students
-    @students = Student.all
+    @students = policy_scope(Student)
   end
 
   def set_dates

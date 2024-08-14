@@ -17,7 +17,7 @@ class Installment < ApplicationRecord
 
   def set_invoice_number
     return if invoice_number.present?
-    self.invoice_number = self.user.installments.most_recently_created&.invoice_number&.next || "#{self.user.prefix}-001"
+    self.invoice_number = self.user.installments.most_recently_created&.invoice_number&.next || "#{self.user.prefix}-IN-001"
   end
 
   def set_number

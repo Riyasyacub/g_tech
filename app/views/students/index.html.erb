@@ -17,21 +17,23 @@
 
 <% headers = ['Roll No', 'Name', 'Courses', 'Date of Joining', 'Total Fees'] %>
 
-<div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
-  <ul class="flex flex-wrap -mb-px">
-    <% cls = "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" %>
-    <% active_cls = "inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500" %>
+<% if current_user.admin? %>
+  <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+    <ul class="flex flex-wrap -mb-px">
+      <% cls = "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" %>
+      <% active_cls = "inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500" %>
 
-    <li class="me-2">
-      <%= link_to "All", students_path(query: params[:query], start_date: params[:start_date], end_date: params[:end_date]), class: params[:user_id].blank? ? active_cls : cls %>
-    </li>
-    <% User.non_admin.each do |user| %>
       <li class="me-2">
-        <%= link_to user.name, students_path(user_id: user, query: params[:query], start_date: params[:start_date], end_date: params[:end_date]), class: params[:user_id] == user.id.to_s ? active_cls : cls %>
+        <%= link_to "All", students_path(query: params[:query], start_date: params[:start_date], end_date: params[:end_date]), class: params[:user_id].blank? ? active_cls : cls %>
       </li>
-    <% end %>
-  </ul>
-</div>
+      <% User.non_admin.each do |user| %>
+        <li class="me-2">
+          <%= link_to user.name, students_path(user_id: user, query: params[:query], start_date: params[:start_date], end_date: params[:end_date]), class: params[:user_id] == user.id.to_s ? active_cls : cls %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
 <div id="detailed-pricing" class="w-full overflow-x-auto">
   <div class="overflow-hidden min-w-max">

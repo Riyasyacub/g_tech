@@ -11,10 +11,10 @@ class User < ApplicationRecord
   has_many :students, inverse_of: :user
   has_many :installments, inverse_of: :user
 
-  scope :non_admin, -> { where.not(email: 'admin@g-tec.com') }
+  scope :non_admin, -> { where.not(email: 'admin@gtec.com') }
 
   def admin?
-    self.email == 'admin@g-tec.com'
+    self.email == 'admin@gtec.com'
   end
 
   def has_permission?(permission_names = [])
