@@ -4,7 +4,7 @@ class StudentsController < ApplicationController
 
   # GET /students or /students.json
   def index
-    @students = policy_scope(Student).order(:roll_no)
+    @students = policy_scope(Student).includes(:installments).order(:roll_no)
     authorize @students
     @students = @students.where("name ilike :q or roll_no ilike :q", q: "%#{params[:query]}%") if params[:query].present?
     @students = @students.where(date_of_joining: @start_date..@end_date)

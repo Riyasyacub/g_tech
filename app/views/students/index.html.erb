@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<% headers = ['Roll No', 'Name', 'Courses', 'Date of Joining', 'Total Fees'] %>
+<% headers = ['Roll No', 'Name', 'Courses', 'Date of Joining', 'Total Fees', 'Paid Amount', 'Balance'] %>
 
 <% if current_user.admin? %>
   <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
@@ -52,7 +52,10 @@
           <div class="px-6 py-4 w-1/5"><%= link_to student.name, student_path(student), data: { turbo: false } %></div>
           <div class="px-6 py-4 w-1/5"><%= student.courses %></div>
           <div class="px-6 py-4 w-1/5"><%= student.date_of_joining&.format_date %></div>
-          <div class="px-6 py-4 w-1/5"><%= student.total_fees %></div>
+          <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee %></div>
+          <% paid_amt = student.installments.sum(&:amount).to_f %>
+          <div class="px-6 py-4 w-1/5"><%= paid_amt %></div>
+          <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee - paid_amt %></div>
 
           <div class="px-6 py-4" style="width: 20px;">
             <%= link_to "", data: { action:        "click->slider#openAndRender",
