@@ -32,12 +32,12 @@ namespace :one_off do
   end
 
   task clear_db: :environment do
-    Installment.delete_all
-    Student.delete_all
-    UserPermission.delete_all
-    User.delete_all
-    system('bundle exec rake one_off:create_admin')
-    system('bundle exec rake one_off:create_permissions')
-    system('bundle exec rake one_off:create_admin_permissions')
+    # Installment.delete_all
+    # Student.delete_all
+    # UserPermission.delete_all
+    # User.delete_all
+    # system('bundle exec rake one_off:create_admin')
+    # system('bundle exec rake one_off:create_permissions')
+    # system('bundle exec rake one_off:create_admin_permissions')
   end
 end
