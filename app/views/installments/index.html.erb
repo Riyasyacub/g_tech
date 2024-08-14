@@ -1,7 +1,10 @@
 <div class="m-5 flex justify-between">
   <div>
     <%= form_with(url: installments_path, method: :get) do |f| %>
-      <%= f.text_field :query %>
+      <%= f.text_field :query, value: params[:query] %>
+      <%= f.date_field :start_date, value: @start_date %>
+      <%= f.date_field :end_date, value: @end_date, max: Date.today %>
+      <%= f.select :payment_mode, options_for_select([['Cash & UPI',nil],['Cash', 'cash'], ['UPI', 'upi']], params[:payment_mode])  %>
       <%= f.submit "Search", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
       <%= link_to "Reset", installments_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
     <% end %>
@@ -40,6 +43,18 @@
           <td class="px-6 py-4"><%= link_to "Show Invoice", installment_invoice_path(inst) %></td>
         </tr>
       <% end %>
+
+      <tr class="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <td class="px-6 py-4"></td>
+        <td class="px-6 py-4">Total</td>
+        <td class="px-6 py-4"></td>
+        <td class="px-6 py-4"></td>
+        <td class="px-6 py-4"></td>
+        <td class="px-6 py-4"></td>
+        <td class="px-6 py-4"></td>
+        <td class="px-6 py-4"><%= @installments.sum(&:amount) %></td>
+        <td class="px-6 py-4"></td>
+      </tr>
       </tbody>
     </table>
   </div>

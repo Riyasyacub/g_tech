@@ -1,14 +1,17 @@
 class InstallmentsController < ApplicationController
   before_action :set_installment, only: %i[ show edit update destroy invoice ]
   before_action :set_students, only: %i[ new edit show create ]
+  before_action :set_dates, only: [:index]
 
   layout 'invoice_layout', only: %i[ invoice ]
 
   # GET /installments or /installments.json
   def index
-    @installments = Installment.all.includes(:student).order(date: :desc)
+    @installments = policy_scope(Installment).includes(:student).order(date: :desc)
     authorize @installments
-    @installments = @installments.joins(:student).where("students.name ilike :q or students.roll_no ilike :q or invoice_number ilike :q", q: "%#{params[:query]}%") if params[:query].present?
+    @installments = @installments.joins(:student).where("students.name ilike :q or students.roll_no ilike :q or invoice_number ilike :q or students.courses ilike :q", q: "%#{params[:query]}%") if params[:query].present?
+    @installments = @installments.where(date: @start_date..@end_date)
+    @installments = @installments.where(mode_of_payment: params[:payment_mode]) if params[:payment_mode].present?
   end
 
   # GET /installments/1 or /installments/1.json
@@ -18,7 +21,7 @@ class InstallmentsController < ApplicationController
 
   # GET /installments/new
   def new
-    @installment = Installment.new
+    @installment = current_user.installments.new
     authorize @installment, :create?
   end
 
@@ -29,14 +32,15 @@ class InstallmentsController < ApplicationController
 
   # POST /installments or /installments.json
   def create
-    @installment = Installment.new(installment_params)
+    @installment = current_user.installments.new(installment_params)
     authorize @installment
     respond_to do |format|
       if @installment.save
         format.html { redirect_to installment_url(@installment), success: "Installment was successfully created." }
         format.json { render :show, status: :created, location: @installment }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        flash[:error] = @installment.errors.full_messages
+        format.html { redirect_to action: :new }
         format.json { render json: @installment.errors, status: :unprocessable_entity }
       end
     end
@@ -50,7 +54,8 @@ class InstallmentsController < ApplicationController
         format.html { redirect_to installment_url(@installment), success: "Installment was successfully updated." }
         format.json { render :show, status: :ok, location: @installment }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        flash[:error] = @installment.errors.full_messages
+        format.html { redirect_to action: :edit }
         format.json { render json: @installment.errors, status: :unprocessable_entity }
       end
     end
@@ -75,15 +80,20 @@ class InstallmentsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_installment
-    @installment = Installment.find(params[:id])
+    @installment = policy_scope(Installment).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   def installment_params
-    params.require(:installment).permit(:student_id, :date, :amount, :mode_of_payment, :installment_type)
+    params.require(:installment).permit(:student_id, :date, :amount, :mode_of_payment, :installment_type, :txn_number)
   end
 
   def set_students
     @students = Student.all
+  end
+
+  def set_dates
+    @start_date = params[:start_date]&.to_date || Date.today - 1.month
+    @end_date   = params[:end_date]&.to_date || Date.today
   end
 end

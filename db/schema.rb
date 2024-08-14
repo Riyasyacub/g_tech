@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_28_122444) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_14_102540) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -32,9 +32,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_28_122444) do
     t.string "invoice_number"
     t.integer "mode_of_payment", default: 0
     t.integer "installment_type", default: 0
+    t.bigint "user_id"
+    t.string "txn_number"
     t.index ["invoice_number"], name: "index_installments_on_invoice_number", unique: true
     t.index ["student_id", "number", "installment_type"], name: "idx_on_student_id_number_installment_type_9e04eac66b"
     t.index ["student_id"], name: "index_installments_on_student_id"
+    t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
   create_table "permissions", force: :cascade do |t|
@@ -74,6 +77,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_28_122444) do
     t.string "institution"
     t.string "referred_by"
     t.date "course_completed_at"
+    t.bigint "user_id"
+    t.integer "institution_type", default: 0
+    t.index ["user_id"], name: "index_students_on_user_id"
   end
 
   create_table "user_permissions", force: :cascade do |t|
@@ -98,13 +104,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_28_122444) do
     t.datetime "last_sign_in_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "prefix"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "installments", "students"
+  add_foreign_key "installments", "users"
   add_foreign_key "student_courses", "courses"
   add_foreign_key "student_courses", "students"
+  add_foreign_key "students", "users"
   add_foreign_key "user_permissions", "permissions"
   add_foreign_key "user_permissions", "users"
 end

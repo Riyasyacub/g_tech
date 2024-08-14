@@ -3,11 +3,12 @@ Rails.application.routes.draw do
 
   root to: 'students#index'
 
+  get 'students/:id/details', to: 'students#details', as: :student_details
   get 'students/:id/summary', to: 'students#summary', as: :student_summary
   get 'installments/:id/invoice', to: 'installments#invoice', as: :installment_invoice
   resources :installments
   resources :student_courses
-  authenticate :user, lambda { |u| u.email.in?(['admin@g-tec.com']) } do
+  authenticate :user, lambda { |u| u.admin? } do
     mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   end
   resources :students

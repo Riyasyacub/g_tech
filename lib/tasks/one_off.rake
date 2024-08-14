@@ -2,7 +2,7 @@ require 'activerecord-import/base'
 
 namespace :one_off do
   task create_admin: :environment do
-    User.create(name: 'Admin', email: 'admin@g-tec.com', password: 'password', password_confirmation: 'password')
+    User.create(name: 'Admin', email: 'admin@g-tec.com', password: 'password', password_confirmation: 'password', prefix: 'AD')
   end
 
   task create_permissions: :environment do
@@ -29,5 +29,15 @@ namespace :one_off do
       student.installments.destroy_all
       student.destroy
     end
+  end
+
+  task clear_db: :environment do
+    Installment.delete_all
+    Student.delete_all
+    UserPermission.delete_all
+    User.delete_all
+    system('bundle exec rake one_off:create_admin')
+    system('bundle exec rake one_off:create_permissions')
+    system('bundle exec rake one_off:create_admin_permissions')
   end
 end

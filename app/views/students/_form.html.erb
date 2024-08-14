@@ -27,13 +27,8 @@
   </div>
 
   <div>
-    <%= form.label :total_fees, style: "display: block" %>
-    <%= form.number_field :total_fees %>
-  </div>
-
-  <div>
-    <%= form.label :date_of_joining, style: "display: block" %>
-    <%= form.date_field :date_of_joining %>
+    <%= form.label :category, style: "display: block" %>
+    <%= form.select :category, options_for_select(Student.categories.keys) %>
   </div>
 
   <div>
@@ -42,8 +37,8 @@
   </div>
 
   <div>
-    <%= form.label :category, style: "display: block" %>
-    <%= form.select :category, options_for_select(Student.categories.keys) %>
+    <%= form.label :total_fees, "Course Fee", style: "display: block" %>
+    <%= form.number_field :total_fees %>
   </div>
 
   <div>
@@ -52,11 +47,27 @@
   </div>
 
   <div>
+    <%= form.label :date_of_joining, style: "display: block" %>
+    <%= form.date_field :date_of_joining, min: 3.days.ago, max: Date.today %>
+  </div>
+
+
+  <div>
     <%= form.label :opted_for_certificate, style: "display: block" %>
-    <%= form.radio_button :opted_for_certificate, true %>
-    <%= form.label :opted_for_certificate, "Yes", value: "true"  %>
-    <%= form.radio_button :opted_for_certificate, false, checked: true %>
-    <%= form.label :opted_for_certificate, "No", value: "false" %>
+    <%= form.radio_button :opted_for_certificate, true, checked: student.opted_for_certificate? %>
+    <%= form.label :opted_for_certificate, "Yes" %>
+    <%= form.radio_button :opted_for_certificate, false, checked: !student.opted_for_certificate? %>
+    <%= form.label :opted_for_certificate, "No" %>
+  </div>
+
+  <div>
+    <%= form.label :institution_type, style: "display: block" %>
+    <%= form.radio_button :institution_type, 'school', checked: student.institution_type == 'school' %>
+    <%= form.label :institution_type, "School" %>
+    <%= form.radio_button :institution_type, 'college', checked: student.institution_type == 'college' %>
+    <%= form.label :institution_type, "College" %>
+    <%= form.radio_button :institution_type, 'others', checked: student.institution_type == 'others' %>
+    <%= form.label :institution_type, "Others" %>
   </div>
 
   <div>
@@ -69,11 +80,11 @@
     <%= form.text_field :referred_by %>
   </div>
 
-
   <div>
     <%= form.label :course_completed_at, style: "display: block" %>
     <%= form.date_field :course_completed_at %>
   </div>
+
   <div>
     <%= form.submit %>
   </div>

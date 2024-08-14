@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "student_details_#{@student.id}" do %>
+  <% if @installments.present? %>
+    <% @installments.each do |inst| %>
+
+      <div class="w-full flex bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-500 dark:text-gray-400">
+
+        <div class="px-6 py-4 w-1/5"><%= inst.invoice_number %></div>
+        <div class="px-6 py-4 w-1/5"><%= inst.installment_type.capitalize + " Fee" %></div>
+        <div class="px-6 py-4 w-1/5"><%= inst.number %></div>
+        <div class="px-6 py-4 w-1/5"><%= inst.date&.format_date %></div>
+        <div class="px-6 py-4 w-1/5"><%= inst.amount %></div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-500 dark:text-gray-400">
+      <div class="text-center px-6 py-4">No Installments present</div>
+    </div>
+  <% end %>
+<% end %>

@@ -24,7 +24,7 @@
 
     <div>
       <%= form.label :date, style: "display: block" %>
-      <%= form.date_field :date %>
+      <%= form.date_field :date, max: Date.today, min: 3.days.ago %>
     </div>
 
     <div>
@@ -35,6 +35,11 @@
     <div>
       <%= form.label :mode_of_payment, style: "display: block" %>
       <%= form.select :mode_of_payment, options_for_select(Installment.mode_of_payments.keys, installment.mode_of_payment) %>
+    </div>
+
+    <div>
+      <%= form.label :txn_number, style: "display: block" %>
+      <%= form.text_field :txn_number %>
     </div>
 
     <div>

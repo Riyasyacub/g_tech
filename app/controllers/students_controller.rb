@@ -1,11 +1,14 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: %i[ show edit update destroy summary ]
+  before_action :set_student, only: %i[ show edit update destroy summary details ]
+  before_action :set_dates, only: [:index]
 
   # GET /students or /students.json
   def index
-    @students = Student.all.order(:roll_no)
+    @students = policy_scope(Student).order(:roll_no)
     authorize @students
     @students = @students.where("name ilike :q or roll_no ilike :q", q: "%#{params[:query]}%") if params[:query].present?
+    @students = @students.where(date_of_joining: @start_date..@end_date)
+    @students = @students.where(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
     respond_to do |format|
       format.html
       format.xlsx do
@@ -21,7 +24,7 @@ class StudentsController < ApplicationController
 
   # GET /students/new
   def new
-    @student = Student.new
+    @student = current_user.students.new
   end
 
   # GET /students/1/edit
@@ -30,7 +33,7 @@ class StudentsController < ApplicationController
 
   # POST /students or /students.json
   def create
-    @student = Student.new(student_params)
+    @student = current_user.students.new(student_params)
     authorize @student
     respond_to do |format|
       if @student.save
@@ -72,18 +75,27 @@ class StudentsController < ApplicationController
 
   end
 
+  def details
+    @installments = @student.installments.order(date: :desc)
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_student
-    @student = Student.find_by(id: params[:id])
+    @student = policy_scope(Student).find_by(id: params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   def student_params
     params.require(:student)
           .permit(:name, :address, :contact_number, :total_fees, :courses, :date_of_joining, :category, :exam_fee,
-                  :opted_for_certificate, :institution, :referred_by, :course_completed_at)
+                  :opted_for_certificate, :institution, :referred_by, :course_completed_at, :institution_type)
+  end
+
+  def set_dates
+    @start_date = params[:start_date]&.to_date || Date.today - 1.month
+    @end_date   = params[:end_date]&.to_date || Date.today
   end
 
 end
