@@ -1,4 +1,4 @@
-<%= form_with(model: student) do |form| %>
+<%= form_with(model: student, data: { controller: 'student' }) do |form| %>
   <% if student.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(student.errors.count, "error") %> prohibited this student from being saved:</h2>
@@ -28,27 +28,27 @@
 
   <div>
     <%= form.label :category, style: "display: block" %>
-    <%= form.select :category, options_for_select(Student.categories.keys) %>
+    <%= form.select :category, options_for_select(@categories.pluck(:name, :id), student.course&.category_id), { prompt: "Select Category" }, { data: { student_target: 'category', action: 'change->student#setCourses' } } %>
   </div>
 
   <div>
-    <%= form.label :courses, style: "display: block" %>
-    <%= form.text_field :courses %>
+    <%= form.label :course_id, "Course", style: "display: block" %>
+    <%= form.select :course_id, options_for_select(student.course&.category&.courses&.pluck(:name,:id) || [], student.course&.id), { prompt: "Select Course" }, { data: { student_target: 'course', action: 'change->student#setCourseAttributes' } } %>
   </div>
 
   <div>
     <%= form.label :total_fees, "Course Fee", style: "display: block" %>
-    <%= form.number_field :total_fees %>
+    <%= form.number_field :total_fees, data: { student_target: 'total_fees' } %>
   </div>
 
   <div>
     <%= form.label :exam_fee, style: "display: block" %>
-    <%= form.number_field :exam_fee %>
+    <%= form.number_field :exam_fee, data: { student_target: 'exam_fee' } %>
   </div>
 
   <div>
     <%= form.label :date_of_joining, style: "display: block" %>
-    <%= form.date_field :date_of_joining, min: 3.days.ago, max: Date.today %>
+    <%= form.date_field :date_of_joining, min: 3.days.ago, max: Date.today, value: student.date_of_joining || Date.today, data: { student_target: 'date_of_joining', action: "change->student#setCompletedDate" } %>
   </div>
 
 
@@ -76,13 +76,18 @@
   </div>
 
   <div>
+    <%= form.label :reference_type, "Walk-in By", style: "display: block" %>
+    <%= form.select :reference_type, options_for_select(Student.reference_types.map{ |k,v| [k.humanize, v] }, student.reference_type) %>
+  </div>
+
+  <div>
     <%= form.label :referred_by, style: "display: block" %>
     <%= form.text_field :referred_by %>
   </div>
 
   <div>
     <%= form.label :course_completed_at, style: "display: block" %>
-    <%= form.date_field :course_completed_at %>
+    <%= form.date_field :course_completed_at, data: { student_target: 'completed_at' } %>
   </div>
 
   <div>

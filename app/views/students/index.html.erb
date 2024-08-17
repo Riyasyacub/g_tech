@@ -50,7 +50,7 @@
 
           <div class="px-6 py-4 w-1/5"><%= student.roll_no %></div>
           <div class="px-6 py-4 w-1/5"><%= link_to student.name, student_path(student), data: { turbo: false } %></div>
-          <div class="px-6 py-4 w-1/5"><%= student.courses %></div>
+          <div class="px-6 py-4 w-1/5"><%= student.course&.name %></div>
           <div class="px-6 py-4 w-1/5"><%= student.date_of_joining&.format_date %></div>
           <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee %></div>
           <% paid_amt = student.installments.sum(&:amount).to_f %>

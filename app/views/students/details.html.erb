@@ -9,6 +9,9 @@
         <div class="px-6 py-4 w-1/5"><%= inst.number %></div>
         <div class="px-6 py-4 w-1/5"><%= inst.date&.format_date %></div>
         <div class="px-6 py-4 w-1/5"><%= inst.amount %></div>
+        <div class="px-6 py-4 w-1/5">
+          <%= link_to "Show Invoice", installment_invoice_path(inst), target: "_blank" %>
+        </div>
       </div>
     <% end %>
   <% else %>

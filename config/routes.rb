@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'installments/:id/invoice', to: 'installments#invoice', as: :installment_invoice
   resources :installments
   resources :student_courses
+  resources :categories
   authenticate :user, lambda { |u| u.admin? } do
     mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   end

@@ -34,13 +34,13 @@
         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
           <td class="px-6 py-4"><%= student.roll_no %></td>
           <td class="px-6 py-4"><%= link_to student.name, installment_path(inst) %></td>
-          <td class="px-6 py-4"><%= student.courses %></td>
+          <td class="px-6 py-4"><%= student.course&.name %></td>
           <td class="px-6 py-4"><%= inst.invoice_number %></td>
           <td class="px-6 py-4"><%= inst.date&.format_date %></td>
           <td class="px-6 py-4"><%= inst.installment_type %></td>
           <td class="px-6 py-4"><%= inst.number %></td>
           <td class="px-6 py-4"><%= inst.amount %></td>
-          <td class="px-6 py-4"><%= link_to "Show Invoice", installment_invoice_path(inst) %></td>
+          <td class="px-6 py-4"><%= link_to "Show Invoice", installment_invoice_path(inst), target: "_blank"  %></td>
         </tr>
       <% end %>
 

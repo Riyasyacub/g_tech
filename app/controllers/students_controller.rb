@@ -25,10 +25,12 @@ class StudentsController < ApplicationController
   # GET /students/new
   def new
     @student = current_user.students.new
+    @categories = Category.all
   end
 
   # GET /students/1/edit
   def edit
+    @categories = Category.all
   end
 
   # POST /students or /students.json
@@ -40,7 +42,8 @@ class StudentsController < ApplicationController
         format.html { redirect_to student_url(@student), success: "Student was successfully created." }
         format.json { render :show, status: :created, location: @student }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        flash[:error] = @student.errors.full_messages
+        format.html { redirect_to action: :new }
         format.json { render json: @student.errors, status: :unprocessable_entity }
       end
     end
@@ -54,7 +57,8 @@ class StudentsController < ApplicationController
         format.html { redirect_to student_url(@student), success: "Student was successfully updated." }
         format.json { render :show, status: :ok, location: @student }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        flash[:error] = @student.errors.full_messages
+        format.html { redirect_to action: :edit }
         format.json { render json: @student.errors, status: :unprocessable_entity }
       end
     end
@@ -89,7 +93,7 @@ class StudentsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def student_params
     params.require(:student)
-          .permit(:name, :address, :contact_number, :total_fees, :courses, :date_of_joining, :category, :exam_fee,
+          .permit(:name, :address, :contact_number, :total_fees, :course_id, :date_of_joining, :category, :exam_fee,
                   :opted_for_certificate, :institution, :referred_by, :course_completed_at, :institution_type)
   end
 

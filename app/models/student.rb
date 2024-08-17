@@ -1,16 +1,20 @@
 class Student < ApplicationRecord
 
-  # has_many :student_courses
-  # has_many :courses, through: :student_courses
-  has_many :installments, dependent: :destroy
+  attr_accessor :category
+
+  belongs_to :course, inverse_of: :students
   belongs_to :user, inverse_of: :students
+
+  has_many :installments, dependent: :destroy
 
   before_save :set_roll_no
 
-  enum category: %w[Software Hardware Multimedia Robotics CAD Accounts Tailoring]
+  enum reference_type: %w[google social_media whatsapp print_media mass_media student faculty direct]
   enum institution_type: %w[school college others]
 
   validates_presence_of :name
+
+  validates_presence_of :referred_by, if: Proc.new { |student| student.reference_type.in?(['student', 'faculty']) }
 
   private
 

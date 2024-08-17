@@ -16,7 +16,7 @@
 
   <p>
     <strong>Courses:</strong>
-    <%= student.courses %>
+    <%= student.course&.name %>
   </p>
 
   <p>
@@ -31,7 +31,7 @@
 
   <p>
     <strong>Category:</strong>
-    <%= student.category %>
+    <%= student.course&.category&.name %>
   </p>
 
   <p>
@@ -42,6 +42,11 @@
   <p>
     <strong>Opted for Certificate:</strong>
     <%= student.opted_for_certificate ? 'Yes' : 'No' %>
+  </p>
+
+  <p>
+    <strong>Institution Type:</strong>
+    <%= student.institution_type %>
   </p>
 
   <p>
