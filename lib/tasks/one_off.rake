@@ -2,7 +2,7 @@ require 'activerecord-import/base'
 
 namespace :one_off do
   task create_admin: :environment do
-    User.create(name: 'Admin', email: 'admin@gtec.com', password: 'password', password_confirmation: 'password', prefix: 'AD')
+    User.create(name: 'Admin', email: 'admin@gtec.com', password: 'password', password_confirmation: 'password')
   end
 
   task create_permissions: :environment do
