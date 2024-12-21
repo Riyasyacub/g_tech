@@ -6,7 +6,7 @@ namespace :one_off do
   end
 
   task create_permissions: :environment do
-    permissions = %w[student installment].map do |grp|
+    permissions = %w[student installment enquiry].map do |grp|
       %w[view create edit delete].map do |action|
         Permission.new(name: "#{action}_#{grp}", group: grp)
       end
@@ -17,6 +17,7 @@ namespace :one_off do
 
   task create_admin_permissions: :environment do
     user = User.find_by(email: "admin@gtec.com")
+    user.permissions.destroy_all
     Permission.all.each do |permission|
       user.permissions << permission
       user.save

@@ -1,0 +1,31 @@
+<div id="<%= dom_id enquiry %>">
+  <p>
+    <strong>Name:</strong>
+    <%= enquiry.name %>
+  </p>
+
+  <p>
+    <strong>Address:</strong>
+    <%= enquiry.address %>
+  </p>
+
+  <p>
+    <strong>Category:</strong>
+    <%= enquiry.course&.category&.name %>
+  </p>
+
+  <p>
+    <strong>Courses:</strong>
+    <%= enquiry.course&.name %>
+  </p>
+
+  <p>
+    <strong>Estimated fees:</strong>
+    <%= enquiry.estimated_fees %>
+  </p>
+
+  <p>
+    <strong>Referred by:</strong>
+    <%= enquiry.referred_by %>
+  </p>
+</div>

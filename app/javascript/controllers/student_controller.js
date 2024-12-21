@@ -1,4 +1,5 @@
 import {Controller} from "@hotwired/stimulus"
+
 var courses;
 var found_course;
 
@@ -42,14 +43,25 @@ export default class extends Controller {
     this.setCompletedDate();
   }
 
-  setCompletedDate() {
-    if(found_course) {
+  async setCompletedDate() {
+    if (found_course) {
+    } else {
+      let category = this.categoryTarget.value;
+      const response = await fetch(`/categories/${category}.json`);
+      const data = await response.json();
+
+      const courses = data;
+      let course = this.courseTarget.value;
+      found_course = courses.find(c => c.id === course);
+    }
+
+    if (found_course) {
       this.completed_atTarget.value = this.parseDate(new Date(Date.parse(this.date_of_joiningTarget.value) + (found_course.duration * 24 * 60 * 60 * 1000)).toLocaleDateString("en-US"));
     }
   }
 
   parseDate(date_str) {
     let date_arr = date_str.split("/");
-    return `${date_arr[2]}-${date_arr[0]}-${date_arr[1]}`
+    return `${date_arr[2].padStart(2, '0')}-${date_arr[0].padStart(2, '0')}-${date_arr[1]}`
   }
 }

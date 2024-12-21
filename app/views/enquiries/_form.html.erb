@@ -1,0 +1,52 @@
+<%= form_with(model: enquiry, data: { controller: 'student' }) do |form| %>
+  <% if enquiry.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(enquiry.errors.count, "error") %> prohibited this enquiry from being saved:</h2>
+
+      <ul>
+        <% enquiry.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :address, style: "display: block" %>
+    <%= form.text_area :address %>
+  </div>
+
+  <div>
+    <%= form.label :contact_number, style: "display: block" %>
+    <%= form.text_field :contact_number %>
+  </div>
+
+  <div>
+    <%= form.label :category, style: "display: block" %>
+    <%= form.select :category, options_for_select(@categories.pluck(:name, :id), enquiry.course&.category_id), { prompt: "Select Category" }, { data: { student_target: 'category', action: 'change->student#setCourses' } } %>
+  </div>
+
+  <div>
+    <%= form.label :course_id, "Course", style: "display: block" %>
+    <%= form.select :course_id, options_for_select(enquiry.course&.category&.courses&.pluck(:name,:id) || [], enquiry.course&.id), { prompt: "Select Course" }, { data: { student_target: 'course', action: 'change->student#setCourseAttributes' } } %>
+  </div>
+
+  <div>
+    <%= form.label :estimated_fees, "Course Fee", style: "display: block" %>
+    <%= form.number_field :estimated_fees, data: { student_target: 'total_fees' } %>
+  </div>
+
+  <div>
+    <%= form.label :referred_by, style: "display: block" %>
+    <%= form.text_field :referred_by %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

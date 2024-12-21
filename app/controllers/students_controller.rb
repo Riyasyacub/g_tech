@@ -26,6 +26,7 @@ class StudentsController < ApplicationController
   def new
     @student = current_user.students.new
     @categories = Category.all
+    @enquiry = Enquiry.find_by(id: params[:enquiry_id]) if params[:enquiry_id].present?
   end
 
   # GET /students/1/edit
@@ -94,7 +95,7 @@ class StudentsController < ApplicationController
   def student_params
     params.require(:student)
           .permit(:name, :address, :contact_number, :total_fees, :course_id, :date_of_joining, :category, :exam_fee,
-                  :opted_for_certificate, :institution, :referred_by, :course_completed_at, :institution_type)
+                  :opted_for_certificate, :institution, :referred_by, :course_completed_at, :institution_type, :enquiry_id)
   end
 
   def set_dates

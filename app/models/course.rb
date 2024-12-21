@@ -2,6 +2,7 @@ class Course < ApplicationRecord
 
   # has_many :student_courses
   has_many :students, inverse_of: :course
+  has_many :enquiries, inverse_of: :course
 
   belongs_to :category, inverse_of: :courses
 

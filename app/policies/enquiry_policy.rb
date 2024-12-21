@@ -1,0 +1,38 @@
+class EnquiryPolicy < ApplicationPolicy
+
+  def index?
+    @user.has_permission?('view_enquiry')
+  end
+
+  def show?
+    @user.has_permission?('view_enquiry')
+  end
+
+  def create?
+    @user.has_permission?('create_enquiry')
+  end
+
+  def update?
+    @user.has_permission?('edit_enquiry')
+  end
+
+  def destroy?
+    @user.has_permission?('delete_enquiry')
+  end
+
+  class Scope < ApplicationPolicy::Scope
+
+    def initialize(user, scope)
+      @user  = user
+      @scope = scope
+    end
+
+    def resolve
+      if @user.admin?
+        @scope.all
+      else
+        @scope.where(user_id: @user.id)
+      end
+    end
+  end
+end

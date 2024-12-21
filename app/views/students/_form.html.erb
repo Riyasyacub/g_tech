@@ -10,35 +10,36 @@
       </ul>
     </div>
   <% end %>
+  <%= form.hidden_field :enquiry_id, value: @enquiry&.id %>
 
   <div>
     <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, value: student.name.presence || @enquiry&.name %>
   </div>
 
   <div>
     <%= form.label :address, style: "display: block" %>
-    <%= form.text_area :address %>
+    <%= form.text_area :address, value: student.address.presence || @enquiry&.address %>
   </div>
 
   <div>
     <%= form.label :contact_number, style: "display: block" %>
-    <%= form.text_field :contact_number %>
+    <%= form.text_field :contact_number, value: student.contact_number.presence || @enquiry&.contact_number %>
   </div>
 
   <div>
     <%= form.label :category, style: "display: block" %>
-    <%= form.select :category, options_for_select(@categories.pluck(:name, :id), student.course&.category_id), { prompt: "Select Category" }, { data: { student_target: 'category', action: 'change->student#setCourses' } } %>
+    <%= form.select :category, options_for_select(@categories.pluck(:name, :id), student.course&.category_id || @enquiry&.course&.category_id), { prompt: "Select Category" }, { data: { student_target: 'category', action: 'change->student#setCourses' } } %>
   </div>
 
   <div>
     <%= form.label :course_id, "Course", style: "display: block" %>
-    <%= form.select :course_id, options_for_select(student.course&.category&.courses&.pluck(:name,:id) || [], student.course&.id), { prompt: "Select Course" }, { data: { student_target: 'course', action: 'change->student#setCourseAttributes' } } %>
+    <%= form.select :course_id, options_for_select(student.course&.category&.courses&.pluck(:name,:id) || @enquiry&.course&.category&.courses&.pluck(:name,:id) || [], student.course_id || @enquiry&.course_id), { prompt: "Select Course" }, { data: { student_target: 'course', action: 'change->student#setCourseAttributes' } } %>
   </div>
 
   <div>
     <%= form.label :total_fees, "Course Fee", style: "display: block" %>
-    <%= form.number_field :total_fees, data: { student_target: 'total_fees' } %>
+    <%= form.number_field :total_fees, data: { student_target: 'total_fees' }, value: student.total_fees || @enquiry&.estimated_fees %>
   </div>
 
   <div>
@@ -82,12 +83,14 @@
 
   <div>
     <%= form.label :referred_by, style: "display: block" %>
-    <%= form.text_field :referred_by %>
+    <%= form.text_field :referred_by, value: student.referred_by || @enquiry&.referred_by %>
   </div>
 
   <div>
     <%= form.label :course_completed_at, style: "display: block" %>
-    <%= form.date_field :course_completed_at, data: { student_target: 'completed_at' } %>
+
+    <% enquiry_completed_date =  @enquiry.present? ? Date.today + (@enquiry&.course&.duration || 0).days : nil %>
+    <%= form.date_field :course_completed_at, data: { student_target: 'completed_at' }, value: student.course_completed_at || enquiry_completed_date %>
   </div>
 
   <div>

@@ -1,0 +1,8 @@
+
+<%= render @enquiry %>
+
+<div>
+  <%= link_to "Edit this Enquiry", edit_enquiry_path(@enquiry) %> |
+  <%= link_to "Back to enquiries", enquiries_path %>
+  <%= button_to "Destroy this enquiry", @enquiry, method: :delete %>
+</div>

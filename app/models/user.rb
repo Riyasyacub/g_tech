@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :permissions, through: :user_permissions
   has_many :students, inverse_of: :user
   has_many :installments, inverse_of: :user
+  has_many :enquiries, inverse_of: :user
 
   scope :non_admin, -> { where.not(email: 'admin@gtec.com') }
 

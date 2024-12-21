@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :installments
   resources :student_courses
   resources :categories
+  resources :enquiries
   authenticate :user, lambda { |u| u.admin? } do
     mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   end
