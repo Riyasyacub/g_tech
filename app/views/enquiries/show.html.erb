@@ -1,6 +1,10 @@
+<div data-controller="print">
+<%= button_tag "Print", data: { action: "click->print#printDiv" }, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
 
-<%= render @enquiry %>
-
+  <div data-print-target="divName">
+    <%= render @enquiry %>
+  </div>
+</div>
 <div>
   <%= link_to "Edit this Enquiry", edit_enquiry_path(@enquiry) %> |
   <%= link_to "Back to enquiries", enquiries_path %>
