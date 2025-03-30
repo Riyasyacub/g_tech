@@ -6,6 +6,10 @@
         <div class="w-1/2"><%= student.name %></div>
       </div>
       <div class="flex">
+        <div class="w-1/2">Course Name:</div>
+        <div class="w-1/2"><%= student.course&.name %></div>
+      </div>
+      <div class="flex">
         <div class="w-1/2">Course Fees:</div>
         <div class="-1/2"><%= student.total_fees %></div>
       </div>

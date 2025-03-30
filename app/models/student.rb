@@ -9,11 +9,25 @@ class Student < ApplicationRecord
 
   belongs_to :enquiry, inverse_of: :student, optional: true
 
+  scope :fifteen_crossed, -> { where("CURRENT_DATE - date_of_joining >= 15 ") }
+  scope :halfway_crossed, -> { where("((course_completed_at - date_of_joining) - (CURRENT_DATE - date_of_joining))/coalesce(NULLIF((course_completed_at - date_of_joining), 0), 1) <= 0.5 ") }
+  scope :halfway_pending, -> do
+    paid_amount = Installment.select("sum(amount) amount, student_id").group(:student_id).to_sql
+
+    halfway_crossed.joins("left join (#{paid_amount}) paid_amounts on paid_amounts.student_id = students.id ").where("total_fees - paid_amounts.amount != 0")
+  end
+  scope :fifteen_pending, -> do
+    paid_amount = Installment.select("sum(amount) amount, student_id").group(:student_id).to_sql
+
+    fifteen_crossed.joins("left join (#{paid_amount}) paid_amounts on paid_amounts.student_id = students.id ").where("((total_fees - paid_amounts.amount) / coalesce(NULLIF(total_fees, 0), 1)) < 0.5")
+  end
+
   before_validation :rectify_numbers
   before_save :set_roll_no
 
   enum reference_type: %w[google social_media whatsapp print_media mass_media student faculty direct]
   enum institution_type: %w[school college others]
+  enum exam_status: %w[applied ]
 
   validates_presence_of :name
 
@@ -27,7 +41,7 @@ class Student < ApplicationRecord
   end
 
   def rectify_numbers
-    self.exam_fee = self.exam_fee.to_f
+    self.exam_fee   = self.exam_fee.to_f
     self.total_fees = self.total_fees.to_f
   end
 end

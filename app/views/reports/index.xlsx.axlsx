@@ -1,0 +1,16 @@
+wb         = xlsx_package.workbook
+head_style = wb.styles.add_style b: true
+
+wb.add_worksheet(name: "Report") do |sheet|
+  headers = ['Roll No', 'Name', "Mobile number", 'Course', 'Course Fee', 'Exam Fee', 'Total Fee', 'Fees Paid', 'Balance',  'DOJ', 'Completion Date', 'Referred By']
+  sheet.add_row headers, style: head_style
+  @students.each do |student|
+    paid_amt = student.installments.sum(&:amount).to_f
+    arr = [student.roll_no, student.name, student.contact_number, student.course&.name, student.total_fees, student.exam_fee, student.total_fees + student.exam_fee, paid_amt, student.total_fees + student.exam_fee - paid_amt,  student.date_of_joining.format_date, student.course_completed_at.format_date, student.referred_by]
+    type_arr = [:string, :string, :string,:string, :float, :float, :float, :float, :float, :date, :date, :string]
+    sheet.add_row(arr, types: type_arr)
+  end
+
+
+
+end

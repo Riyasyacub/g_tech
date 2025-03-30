@@ -12,7 +12,7 @@ wb.add_worksheet(name: "Students") do |sheet|
   @students.each do |student|
     course_fee_installments = student.installments.select { |a| a.installment_type == 'course' }
 
-    arr = [student.roll_no, student.name, student.category, student.courses, student.date_of_joining, student.total_fees]
+    arr = [student.roll_no, student.name, student.category, student.course&.name, student.date_of_joining, student.total_fees]
     course_fee_installments.each do |inst|
       arr += [inst.invoice_number, inst.date, inst.mode_of_payment, inst.amount]
     end
@@ -27,6 +27,36 @@ wb.add_worksheet(name: "Students") do |sheet|
       type_arr += [:string, :date, :string, :float]
     end
     type_arr += [:float, :string, :float, :float, :date]
+
+    sheet.add_row(arr, types: type_arr)
+  end
+
+end
+
+
+wb.add_worksheet(name: "Fees Pending") do |sheet|
+  arr = ['Roll No', 'Name', 'Category', 'Courses', 'Date of Joining', 'Course Fees', 'Phone number', 'Fees Pending']
+  sheet.add_row arr, style: head_style
+  @students.halfway_pending.each do |student|
+
+    arr = [student.roll_no, student.name, student.category, student.course&.name, student.date_of_joining, student.total_fees, student.contact_number, student.total_fees - student.installments.sum(&:amount)]
+
+    type_arr = [:string, :string, :string, :string, :date, :float, :string, :float]
+
+    sheet.add_row(arr, types: type_arr)
+  end
+
+end
+
+wb.add_worksheet(name: "Fees Pending after 15 Days") do |sheet|
+  arr = ['Roll No', 'Name', 'Category', 'Courses', 'Date of Joining', 'Course Fees', 'Phone number', 'Fees Pending']
+  sheet.add_row arr, style: head_style
+
+  @students.fifteen_pending.each do |student|
+
+    arr = [student.roll_no, student.name, student.category, student.course&.name, student.date_of_joining, student.total_fees, student.contact_number, student.total_fees - student.installments.sum(&:amount)]
+
+    type_arr = [:string, :string, :string, :string, :date, :float, :string, :float]
 
     sheet.add_row(arr, types: type_arr)
   end

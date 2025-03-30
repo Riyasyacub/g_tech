@@ -10,16 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_14_102540) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_30_073001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_categories_on_code", unique: true
+    t.index ["name"], name: "index_categories_on_name", unique: true
+  end
 
   create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "code"
-    t.float "total_fee"
+    t.float "total_fee", default: 0.0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "exam_fee", default: 0.0
+    t.integer "duration", default: 0
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_courses_on_category_id"
+  end
+
+  create_table "enquiries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.string "contact_number"
+    t.string "referred_by"
+    t.float "estimated_fees", default: 0.0
+    t.uuid "course_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_enquiries_on_course_id"
+    t.index ["user_id"], name: "index_enquiries_on_user_id"
   end
 
   create_table "installments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -69,16 +96,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_14_102540) do
     t.datetime "updated_at", null: false
     t.float "total_fees"
     t.string "contact_number"
-    t.text "courses"
     t.date "date_of_joining"
-    t.integer "category", default: 0
     t.float "exam_fee"
-    t.boolean "opted_for_certificate", default: false
+    t.boolean "opted_for_certificate", default: true
     t.string "institution"
     t.string "referred_by"
     t.date "course_completed_at"
     t.bigint "user_id"
     t.integer "institution_type", default: 0
+    t.uuid "course_id"
+    t.integer "reference_type", default: 0
+    t.uuid "enquiry_id"
+    t.integer "exam_status", default: 0
+    t.date "exam_date"
+    t.boolean "certificate_issued", default: false
+    t.date "certificate_issued_date"
+    t.string "certificate_issued_by"
+    t.index ["course_id"], name: "index_students_on_course_id"
+    t.index ["enquiry_id"], name: "index_students_on_enquiry_id"
     t.index ["user_id"], name: "index_students_on_user_id"
   end
 
@@ -109,10 +144,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_14_102540) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "courses", "categories"
+  add_foreign_key "enquiries", "courses"
+  add_foreign_key "enquiries", "users"
   add_foreign_key "installments", "students"
   add_foreign_key "installments", "users"
   add_foreign_key "student_courses", "courses"
   add_foreign_key "student_courses", "students"
+  add_foreign_key "students", "courses"
+  add_foreign_key "students", "enquiries"
   add_foreign_key "students", "users"
   add_foreign_key "user_permissions", "permissions"
   add_foreign_key "user_permissions", "users"

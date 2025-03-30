@@ -1,0 +1,72 @@
+<div class="m-5 flex justify-between">
+  <div>
+    <%= form_with(url: reports_path, method: :get) do |f| %>
+      <%= f.text_field :query, value: params[:query], class: "w-32" %>
+      <%= f.date_field :start_date, value: @start_date, class: "w-32" %>
+      <%= f.date_field :end_date, value: @end_date, max: Date.today, class: "w-32" %>
+
+      <div>
+        <%= f.label "Course", :course_id %>
+        <%= f.select :course_id, options_for_select(Course.all.pluck(:name, :id), params[:course_id]), prompt: "Select Course" %>
+      </div>
+      <div>
+        <%= f.label :fee_percentage, "Fees paid in %" %>
+        <%= f.number_field :fee_percentage, placeholder: "In percentage", value: params[:fee_percentage] || 0 %> %
+      </div>
+      <div>
+        <%= f.label :crossed_days, "Crossed No of Days" %>
+        <%= f.number_field :crossed_days, placeholder: 'Crossed days', value: params[:crossed_days] || 0 %>
+      </div>
+      <div>
+        <%= f.label :crossed_days_percent, "Crossed No of Days in %" %>
+        <%= f.number_field :crossed_days_percent, placeholder: 'Crossed days In percent', value: params[:crossed_days_percent] || 0 %>
+      </div>
+      <div>
+        <%= f.label :exclude_completed_students, "Exclude Completed Students" %>
+        <%= f.check_box :exclude_completed_students, checked: params[:exclude_completed_students] == '1' %>
+      </div>
+
+      <div>
+        <%= f.label :referred_by, "Referred By" %>
+        <%= f.text_field :referred_by, value: params[:referred_by] %>
+      </div>
+
+      <%= f.submit "Search", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+      <%= link_to "Reset", reports_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+      <%= link_to "Download Report", reports_path(**params.permit!.to_h.merge(format: :xlsx)), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
+    <% end %>
+  </div>
+</div>
+
+<%= render "layouts/users_nav_bar" %>
+
+<% headers = ['Roll No', 'Name', 'Course', 'Course Fee', 'Exam Fee', 'Total Fee', 'Fees Paid', 'Balance', 'DOJ', 'Completion Date', "Referred By"] %>
+
+<div id="detailed-pricing" class="w-full overflow-x-auto">
+  <div class="overflow-hidden min-w-max">
+    <div class="w-full flex p-4 text-sm font-medium text-gray-900 bg-gray-100 border-t border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+      <% headers.each do |h| %>
+        <div class="w-1/5 flex items-center"><%= h %></div>
+      <% end %>
+      <div style="width: 20px;"></div>
+    </div>
+
+    <% @students.each do |student| %>
+      <div class="w-full flex bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-500 dark:text-gray-400">
+
+        <div class="px-6 py-4 w-1/5"><%= student.roll_no %></div>
+        <div class="px-6 py-4 w-1/5"><%= link_to student.name, student_path(student), data: { turbo: false } %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.course&.name %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.total_fees %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.exam_fee %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee %></div>
+        <% paid_amt = student.installments.sum(&:amount).to_f %>
+        <div class="px-6 py-4 w-1/5"><%= paid_amt %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee - paid_amt %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.date_of_joining&.format_date %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.course_completed_at&.format_date %></div>
+        <div class="px-6 py-4 w-1/5"><%= student.referred_by %></div>
+      </div>
+    <% end %>
+  </div>
+</div>

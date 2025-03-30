@@ -13,7 +13,7 @@ class StudentsController < ApplicationController
       format.html
       format.xlsx do
         authorize Installment.new
-        @students = @students.includes(:installments).order(:roll_no)
+        @students = policy_scope(Student).includes(:installments).order(:roll_no)
       end
     end
   end
