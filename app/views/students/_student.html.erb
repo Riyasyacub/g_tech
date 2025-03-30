@@ -63,4 +63,16 @@
     <strong>Course Completed At:</strong>
     <%= student.course_completed_at&.format_date %>
   </p>
+  <p>
+    <strong>Exam Status:</strong>
+    <%= student.exam_status.humanize %>
+  </p>
+  <p>
+    <strong>Action Date:</strong>
+    <%= student.action_date&.format_date %>
+  </p>
+  <p>
+    <strong>Certificate Issued By:</strong>
+    <%= student.certificate_issued_by %>
+  </p>
 </div>

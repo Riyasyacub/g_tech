@@ -16,7 +16,7 @@
 </div>
 
 <div>
-  <% headers = ['Roll No', 'Student Name', 'Courses', 'Invoice Number', 'Date', 'Type', 'number', 'Amount', 'Action'] %>
+  <% headers = ['Roll No', 'Student Name', 'Courses', 'Invoice Number', 'Date', 'number', 'Amount', 'Action'] %>
   <div class="relative overflow-x-auto">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -37,7 +37,7 @@
           <td class="px-6 py-4"><%= student.course&.name %></td>
           <td class="px-6 py-4"><%= inst.invoice_number %></td>
           <td class="px-6 py-4"><%= inst.date&.format_date %></td>
-          <td class="px-6 py-4"><%= inst.installment_type %></td>
+<!--          <td class="px-6 py-4"><%#= inst.installment_type %></td>-->
           <td class="px-6 py-4"><%= inst.number %></td>
           <td class="px-6 py-4"><%= inst.amount %></td>
           <td class="px-6 py-4"><%= link_to "Show Invoice", installment_invoice_path(inst), target: "_blank"  %></td>
@@ -48,7 +48,7 @@
         <td class="px-6 py-4"></td>
         <td class="px-6 py-4">Total</td>
         <td class="px-6 py-4"></td>
-        <td class="px-6 py-4"></td>
+<!--        <td class="px-6 py-4"></td>-->
         <td class="px-6 py-4"></td>
         <td class="px-6 py-4"></td>
         <td class="px-6 py-4"></td>

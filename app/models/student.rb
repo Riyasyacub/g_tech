@@ -23,11 +23,11 @@ class Student < ApplicationRecord
   end
 
   before_validation :rectify_numbers
-  before_save :set_roll_no
+  before_save :set_roll_no, :validate_certificate_issued_by
 
   enum reference_type: %w[google social_media whatsapp print_media mass_media student faculty direct]
   enum institution_type: %w[school college others]
-  enum exam_status: %w[applied ]
+  enum exam_status: %w[pending applied completed certificate_issued]
 
   validates_presence_of :name
 
@@ -38,6 +38,13 @@ class Student < ApplicationRecord
   def set_roll_no
     return if roll_no.present?
     self.roll_no = self.user.students.most_recently_created&.roll_no&.next || "#{self.user.prefix}-001"
+  end
+
+  def validate_certificate_issued_by
+    return if certificate_issued_by.blank?
+    return if self.certificate_issued?
+
+    self.certificate_issued_by = nil
   end
 
   def rectify_numbers

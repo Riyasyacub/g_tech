@@ -1,0 +1,39 @@
+<div class="flex justify-between">
+  <div class="w-1/2">
+    <%= render "students/student_summary", student: student, installment_id: nil %>
+  </div>
+  <%= form_with(model: student, url: exam_path(student.id), class: "w-1/2 ml-8", method: :patch) do |form| %>
+    <% if student.errors.any? %>
+      <div style="color: red">
+        <h2><%= pluralize(student.errors.count, "error") %> prohibited this installment from being saved:</h2>
+
+        <ul>
+          <% student.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :exam_status, style: "display: block" %>
+      <%= form.select :exam_status, options_for_select(Student.exam_statuses.keys.map {|a| [a.humanize, a]}, student.exam_status), prompt: "Select Status" %>
+    </div>
+    <% if student.action_date.present? %>
+      <div>Previous Action Date: <span><%= student.action_date.format_date %></span></div>
+    <% end %>
+    <div>
+      <%= form.label :action_date, style: "display: block" %>
+      <%= form.date_field :action_date, value: Date.today %>
+    </div>
+    <div>
+      <%= form.label :certificate_issued_by, style: "display: block" %>
+      <%= form.text_field :certificate_issued_by %>
+    </div>
+<% unless student.certificate_issued? %>
+    <div>
+      <%= form.submit "Update Student", { class: "mt-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800" } %>
+    </div>
+      <% end %>
+  <% end %>
+</div>

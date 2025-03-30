@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_30_073001) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_30_144731) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -108,9 +108,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_30_073001) do
     t.integer "reference_type", default: 0
     t.uuid "enquiry_id"
     t.integer "exam_status", default: 0
-    t.date "exam_date"
-    t.boolean "certificate_issued", default: false
-    t.date "certificate_issued_date"
+    t.date "action_date"
     t.string "certificate_issued_by"
     t.index ["course_id"], name: "index_students_on_course_id"
     t.index ["enquiry_id"], name: "index_students_on_enquiry_id"
