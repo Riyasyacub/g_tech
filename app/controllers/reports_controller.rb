@@ -9,10 +9,10 @@ class ReportsController < ApplicationController
     @students = @students.where(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
     @students = @students.where(course_id: params[:course_id]) if params[:course_id].present?
 
-    if params[:fee_percentage].present? && params[:fee_percentage].to_i > 0
+    if params[:fee_percentage_from].present? && params[:fee_percentage_from].to_i > 0
       paid_amount = Installment.select("sum(amount) amount, student_id").group(:student_id).to_sql
       # @students = @students.joins("left join (#{paid_amount}) paid_amounts on paid_amounts.student_id = students.id ").where("((total_fees - paid_amounts.amount) / coalesce(NULLIF(total_fees, 0), 1)) < #{params[:fee_percentage].to_f / 100}")
-      @students = @students.joins("left join (#{paid_amount}) paid_amounts on paid_amounts.student_id = students.id ").where("(paid_amounts.amount / coalesce(NULLIF(total_fees, 0), 1)) > #{params[:fee_percentage].to_f / 100.0}")
+      @students = @students.joins("left join (#{paid_amount}) paid_amounts on paid_amounts.student_id = students.id ").where("(paid_amounts.amount / coalesce(NULLIF(total_fees, 0), 1)) between #{params[:fee_percentage_from].to_f / 100.0} and #{(params[:fee_percentage_to] || 100).to_f / 100.0}")
     end
 
     if params[:crossed_days].present? && params[:crossed_days].to_i > 0

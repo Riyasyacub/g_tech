@@ -62,6 +62,6 @@ export default class extends Controller {
 
   parseDate(date_str) {
     let date_arr = date_str.split("/");
-    return `${date_arr[2].padStart(2, '0')}-${date_arr[0].padStart(2, '0')}-${date_arr[1]}`
+    return `${date_arr[2].padStart(2, '0')}-${date_arr[0].padStart(2, '0')}-${date_arr[1].padStart(2, '0')}`
   }
 }

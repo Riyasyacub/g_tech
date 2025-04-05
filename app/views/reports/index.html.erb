@@ -2,7 +2,7 @@
   <div>
     <%= form_with(url: reports_path, method: :get, class: "w-full") do |f| %>
       <div class="flex justify-between w-full">
-        <div class="w-1/2" >
+        <div class="w-1/2">
           <%= f.text_field :query, value: params[:query] %>
           <%= f.date_field :start_date, value: @start_date %>
           <%= f.date_field :end_date, value: @end_date, max: Date.today %>
@@ -12,9 +12,20 @@
             <%= f.select :course_id, options_for_select(Course.all.pluck(:name, :id), params[:course_id]), prompt: "Select Course" %>
           </div>
           <div class="mt-2">
-            <%= f.label :fee_percentage, "Fees paid in %" %><br>
-            <%= f.number_field :fee_percentage, placeholder: "In percentage", value: params[:fee_percentage] || 0 %>
+            <%= f.label :fee_percentage_from, "Fees paid in %" %><br>
+            <div class="flex justify-between mr-32">
+              <div>
+                <%= f.label :fee_percentage_from, "From" %><br>
+                <%= f.number_field :fee_percentage_from, placeholder: "From percentage", value: params[:fee_percentage_from] || 0 %>
+                <br>
+              </div>
+              <div>
+                <%= f.label :fee_percentage_to, "to" %><br>
+                <%= f.number_field :fee_percentage_to, placeholder: "To percentage", value: params[:fee_percentage_to] || 100 %>
+              </div>
+            </div>
           </div>
+
         </div>
         <div class="w-1/2">
           <div class="mt-2">
@@ -65,15 +76,15 @@
         <div class="px-6 py-4 w-1/5"><%= student.roll_no %></div>
         <div class="px-6 py-4 w-1/5"><%= link_to student.name, student_path(student), data: { turbo: false } %></div>
         <div class="px-6 py-4 w-1/5"><%= student.course&.name %></div>
-<!--        <div class="px-6 py-4 w-1/5"><%#= student.total_fees %></div>-->
-<!--        <div class="px-6 py-4 w-1/5"><%#= student.exam_fee %></div>-->
+        <!--        <div class="px-6 py-4 w-1/5"><%#= student.total_fees %></div>-->
+        <!--        <div class="px-6 py-4 w-1/5"><%#= student.exam_fee %></div>-->
         <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee %></div>
         <% paid_amt = student.installments.sum(&:amount).to_f %>
         <div class="px-6 py-4 w-1/5"><%= paid_amt %></div>
         <div class="px-6 py-4 w-1/5"><%= student.total_fees + student.exam_fee - paid_amt %></div>
         <div class="px-6 py-4 w-1/5"><%= student.exam_status&.humanize %></div>
         <div class="px-6 py-4 w-1/5"><%= student.date_of_joining&.format_date %></div>
-<!--        <div class="px-6 py-4 w-1/5"><%#= student.course_completed_at&.format_date %></div>-->
+        <!--        <div class="px-6 py-4 w-1/5"><%#= student.course_completed_at&.format_date %></div>-->
         <div class="px-6 py-4 w-1/5"><%= student.referred_by %></div>
         <div class="px-6 py-4 w-1/5"><%= link_to "Action", edit_exam_path(student.id), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %></div>
       </div>
