@@ -79,4 +79,4 @@ test:
 #
 production:
   <<: *default
-  database: g_tech_development
+  url: "postgresql://g_tec_live_user:PuqNKmKM0FC6aKU7wAFAS4hrsXtqHsNq@dpg-d1uj7jqdbo4c73elq580-a/g_tec_live"
