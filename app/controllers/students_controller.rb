@@ -4,16 +4,17 @@ class StudentsController < ApplicationController
 
   # GET /students or /students.json
   def index
-    @students = policy_scope(Student).includes(:installments).order(:roll_no)
-    authorize @students
-    @students = @students.where("name ilike :q or roll_no ilike :q", q: "%#{params[:query]}%") if params[:query].present?
-    @students = @students.where(date_of_joining: @start_date..@end_date)
-    @students = @students.where(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
     respond_to do |format|
-      format.html
+      format.html do
+        @students = policy_scope(Student).includes(:installments, :course).order(:roll_no)
+        authorize @students
+        @students = @students.where("name ilike :q or roll_no ilike :q", q: "%#{params[:query]}%") if params[:query].present?
+        @students = @students.where(date_of_joining: @start_date..@end_date)
+        @students = @students.where(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
+      end
       format.xlsx do
         authorize Installment.new
-        @students = policy_scope(Student).includes(:installments).order(:roll_no)
+        @students = policy_scope(Student).includes(:installments, :course).order(:roll_no)
       end
     end
   end
