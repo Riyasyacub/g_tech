@@ -1,9 +1,9 @@
-wb         = xlsx_package.workbook
-head_style = wb.styles.add_style b: true
-max_installment_count = @students.map { |a| a.installments.select { |a| a.installment_type == 'course' }.count}.max
+wb                    = xlsx_package.workbook
+head_style            = wb.styles.add_style b: true
+max_installment_count = @students.map { |a| a.installments.select { |a| a.installment_type == 'course' }.count }.max
 
 wb.add_worksheet(name: "Students") do |sheet|
-  arr = ['Roll No', 'Name', 'Category', 'Courses', 'Date of Joining', 'Total Fees']
+  arr = ['Roll No', 'Name', 'Contact Number', 'Category', 'Courses', 'Date of Joining', 'Total Fees']
   max_installment_count.times do |i|
     n   = i + 1
     arr += ["#{n.ordinalize} Invoice Number", "#{n.ordinalize} Installment date", "#{n.ordinalize} Mode of Payment", "#{n.ordinalize} Paid Amount"]
@@ -13,7 +13,7 @@ wb.add_worksheet(name: "Students") do |sheet|
   @students.each do |student|
     course_fee_installments = student.installments.select { |a| a.installment_type == 'course' }
 
-    arr = [student.roll_no, student.name, student.category, student.course&.name, student.date_of_joining, student.total_fees]
+    arr = [student.roll_no, student.name, student.contact_number, student.category, student.course&.name, student.date_of_joining, student.total_fees]
     course_fee_installments.each do |inst|
       arr += [inst.invoice_number, inst.date, inst.mode_of_payment, inst.amount]
     end
@@ -23,20 +23,19 @@ wb.add_worksheet(name: "Students") do |sheet|
     arr += [student.total_fees - course_fee_installments.sum(&:amount), student.opted_for_certificate ? 'Yes' : 'No', student.exam_fee,
             student.installments.select { |a| a.installment_type == 'exam' }.sum(&:amount), student.course_completed_at]
 
-    type_arr = [:string, :string, :string, :string, :date, :float]
+    type_arr = [:string, :string, :string, :string, :string, :date, :float]
     course_fee_installments.length.times do |i|
       type_arr += [:string, :date, :string, :float]
     end
     (max_installment_count - course_fee_installments.length).times do
-          type_arr += [nil, nil, nil, nil]
-        end
+      type_arr += [nil, nil, nil, nil]
+    end
     type_arr += [:float, :string, :float, :float, :date]
 
     sheet.add_row(arr, types: type_arr)
   end
 
 end
-
 
 wb.add_worksheet(name: "Fees Pending") do |sheet|
   arr = ['Roll No', 'Name', 'Category', 'Courses', 'Date of Joining', 'Course Fees', 'Phone number', 'Fees Pending']
